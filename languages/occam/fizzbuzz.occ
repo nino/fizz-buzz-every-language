@@ -1,0 +1,22 @@
+-- FizzBuzz in occam. Indentation is significant and two spaces deep.
+#INCLUDE "course.module"
+
+PROC fizzbuzz (CHAN BYTE out!)
+  INT i:
+  SEQ
+    i := 1
+    WHILE i <= 100
+      SEQ
+        IF
+          (i \ 15) = 0
+            out.string ("FizzBuzz*n", 0, out!)
+          (i \ 3) = 0
+            out.string ("Fizz*n", 0, out!)
+          (i \ 5) = 0
+            out.string ("Buzz*n", 0, out!)
+          TRUE
+            SEQ
+              out.int (i, 0, out!)
+              out.string ("*n", 0, out!)
+        i := i + 1
+:

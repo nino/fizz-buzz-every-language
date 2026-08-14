@@ -1,0 +1,18 @@
+#!/usr/bin/env rc
+# FizzBuzz in rc, the Plan 9 shell. Arithmetic is farmed out to `expr`.
+i=1
+while (test $i -le 100) {
+    if (~ `{expr $i % 15} 0) {
+        echo FizzBuzz
+    }
+    if not if (~ `{expr $i % 3} 0) {
+        echo Fizz
+    }
+    if not if (~ `{expr $i % 5} 0) {
+        echo Buzz
+    }
+    if not {
+        echo $i
+    }
+    i=`{expr $i + 1}
+}

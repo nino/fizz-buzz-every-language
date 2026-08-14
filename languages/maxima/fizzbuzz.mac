@@ -1,0 +1,7 @@
+/* FizzBuzz in Maxima */
+for i: 1 thru 100 do
+  if mod(i, 15) = 0 then print("FizzBuzz")
+  elseif mod(i, 3) = 0 then print("Fizz")
+  elseif mod(i, 5) = 0 then print("Buzz")
+  else print(i)$
+quit()$

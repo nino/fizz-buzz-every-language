@@ -1,0 +1,13 @@
+# FizzBuzz in SPARQL 1.1. BIND + VALUES generate 1..100 without any data,
+# and the CASE-equivalent is nested IF().
+SELECT ?out WHERE {
+  VALUES ?tens { 0 1 2 3 4 5 6 7 8 9 }
+  VALUES ?ones { 0 1 2 3 4 5 6 7 8 9 }
+  BIND(?tens * 10 + ?ones + 1 AS ?n)
+  BIND(
+    IF(?n % 15 = 0, "FizzBuzz",
+      IF(?n % 3 = 0, "Fizz",
+        IF(?n % 5 = 0, "Buzz", STR(?n))))
+    AS ?out)
+}
+ORDER BY ?n

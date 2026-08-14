@@ -1,0 +1,14 @@
+/* FizzBuzz in Yacas.
+   Three parser quirks shape this. A function is applied only when the paren
+   follows the name directly, so `If (x)` reads as the variable If beside a
+   bracketed expression. Nesting If three deep fails to parse, so the cascade
+   is split across two functions. And ToString is a zero-argument macro that
+   captures output -- `ToString(n)` is a parse error, not a conversion -- so
+   the number is echoed as a number and the trailing blank Echo adds is
+   trimmed by run.sh. */
+fizzThenBuzz(n) := If(Mod(n, 3) = 0, "Fizz", If(Mod(n, 5) = 0, "Buzz", n));
+
+fizzbuzz(n) := If(Mod(n, 15) = 0, "FizzBuzz", fizzThenBuzz(n));
+
+For(i := 1, i <= 100, i++) [ Echo(fizzbuzz(i)); ];
+Exit();

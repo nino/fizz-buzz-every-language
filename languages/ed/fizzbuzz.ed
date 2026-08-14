@@ -1,0 +1,53 @@
+# FizzBuzz in ed, the standard text editor.
+# The buffer starts as the numbers 1..100 (run.sh pipes them in).
+# ed has no arithmetic and no loops, so each multiple is addressed
+# directly: one substitution per line that needs a word.
+3s/.*/Fizz/
+5s/.*/Buzz/
+6s/.*/Fizz/
+9s/.*/Fizz/
+10s/.*/Buzz/
+12s/.*/Fizz/
+15s/.*/FizzBuzz/
+18s/.*/Fizz/
+20s/.*/Buzz/
+21s/.*/Fizz/
+24s/.*/Fizz/
+25s/.*/Buzz/
+27s/.*/Fizz/
+30s/.*/FizzBuzz/
+33s/.*/Fizz/
+35s/.*/Buzz/
+36s/.*/Fizz/
+39s/.*/Fizz/
+40s/.*/Buzz/
+42s/.*/Fizz/
+45s/.*/FizzBuzz/
+48s/.*/Fizz/
+50s/.*/Buzz/
+51s/.*/Fizz/
+54s/.*/Fizz/
+55s/.*/Buzz/
+57s/.*/Fizz/
+60s/.*/FizzBuzz/
+63s/.*/Fizz/
+65s/.*/Buzz/
+66s/.*/Fizz/
+69s/.*/Fizz/
+70s/.*/Buzz/
+72s/.*/Fizz/
+75s/.*/FizzBuzz/
+78s/.*/Fizz/
+80s/.*/Buzz/
+81s/.*/Fizz/
+84s/.*/Fizz/
+85s/.*/Buzz/
+87s/.*/Fizz/
+90s/.*/FizzBuzz/
+93s/.*/Fizz/
+95s/.*/Buzz/
+96s/.*/Fizz/
+99s/.*/Fizz/
+100s/.*/Buzz/
+,p
+Q

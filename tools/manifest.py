@@ -168,7 +168,7 @@ LANGUAGES = {
     "piet":         (None, "not implemented, see NOTES.md"),
     "lolcode":      ("lci",    "lci fizzbuzz.lol"),
     "chef":         (None, "partial, see NOTES.md"),
-    "shakespeare":  (None, "partial, see NOTES.md"),
+    "shakespeare":  ("python3", "python3 ../../tools/spl.py fizzbuzz.spl"),
     "arnoldc":      (None, "requires the ArnoldC jar"),
     "rockstar":     ("rockstar", "rockstar fizzbuzz.rock"),
     "emojicode":    ("emojicodec", "emojicodec fizzbuzz.emojic -o $T/fizzbuzz && $T/fizzbuzz"),
@@ -191,7 +191,84 @@ LANGUAGES = {
     "factor":       ("factor", "factor --version 2>&1 | grep -qi coreutils && "
                                "{ echo 'PATH factor is coreutils, not the language' >&2; exit 127; }\n"
                                "factor -script fizzbuzz.factor"),
-    "red":          ("red",    "red fizzbuzz.red"),
+    "red":          ("red",    "red --version 2>&1 | grep -qi 'GNU ed' && "
+                               "{ echo 'PATH red is restricted ed, not the language' >&2; exit 127; }\n"
+                               "red fizzbuzz.red"),
     "ats":          ("patscc", "patscc -o $T/fizzbuzz fizzbuzz.dats && $T/fizzbuzz"),
+    # ---- second batch: shells and CLI ---------------------------------------
+    "ksh":          ("ksh",    "ksh fizzbuzz.ksh"),
+    "tcsh":         ("tcsh",   "tcsh fizzbuzz.csh"),
+    "dash":         ("dash",   "dash fizzbuzz.sh"),
+    "elvish":       ("elvish", "elvish fizzbuzz.elv"),
+    "xonsh":        ("xonsh",  "xonsh fizzbuzz.xsh"),
+    "rc":           ("rc",     "rc fizzbuzz.rc"),
+    "jq":           ("jq",     "jq -n -r -f fizzbuzz.jq"),
+
+    # ---- typesetting and page description -----------------------------------
+    "tex":          ("tex",    "cp fizzbuzz.tex $T/ && (cd $T && tex -interaction=batchmode fizzbuzz.tex >/dev/null 2>&1); cat $T/fizzbuzz.out"),
+    "postscript":   ("gs",     "gs -q -dBATCH -dNOPAUSE -dNODISPLAY fizzbuzz.ps"),
+    "groff":        ("groff",  "groff -T utf8 fizzbuzz.roff | sed -e 's/[[:space:]]*$//' -e '/^$/d'"),
+    "ed":           ("ed",     "seq 1 100 > $T/nums && ed -s $T/nums < fizzbuzz.ed"),
+
+    # ---- computer algebra and constraint ------------------------------------
+    "maxima":       ("maxima", "maxima --very-quiet < fizzbuzz.mac 2>/dev/null | "
+                               "sed -e 's/[[:space:]]*$//' -e '/^$/d'"),
+    "pari-gp":      ("gp",     "gp -q fizzbuzz.gp"),
+    "gap":          ("gap",    "gap -q -b --nointeract fizzbuzz.g"),
+    "singular":     ("Singular", "Singular -q fizzbuzz.sing"),
+    "yacas":        ("yacas",  "yacas -pc fizzbuzz.ys | sed -e 's/[[:space:]]*$//'"),
+    "minizinc":     ("minizinc", "minizinc fizzbuzz.mzn | grep -v '^-\\+$'"),
+
+    # ---- JVM / .NET family ---------------------------------------------------
+    "haxe":         ("haxe",   "haxe -p . -main Fizzbuzz --interp"),
+    "fantom":       ("fan",    "fan Fizzbuzz.fan"),
+    "xtend":        ("xtend",  "xtend Fizzbuzz.xtend -d $T && java -cp $T Fizzbuzz"),
+    "golo":         ("golo",   "golo golo --files fizzbuzz.golo"),
+
+    # ---- functional ----------------------------------------------------------
+    "clean":        ("clm",    "clm -nt fizzbuzz -o $T/fizzbuzz && $T/fizzbuzz"),
+    "curry":        ("pakcs",  "pakcs --quiet :load fizzbuzz :eval main :quit"),
+    "frege":        ("frege",  "frege fizzbuzz.fr"),
+    "koka":         ("koka",   "koka -e --outputdir=$T fizzbuzz.kk"),
+    "flix":         ("flix",   "flix run fizzbuzz.flix"),
+    "grain":        ("grain",  "grain run fizzbuzz.gr"),
+
+    # ---- newer systems languages --------------------------------------------
+    "c3":           ("c3c",    "c3c compile-run -o $T/fizzbuzz fizzbuzz.c3"),
+    "vale":         ("valec",  "valec build fizzbuzz.vale --output-dir $T && $T/fizzbuzz"),
+    "austral":      ("austral", "austral compile fizzbuzz.aum --entrypoint=Fizzbuzz:main --output=$T/f.c && cc -o $T/fizzbuzz $T/f.c && $T/fizzbuzz"),
+    "beef":         (None, "requires the Beef IDE toolchain"),
+    "inko":         ("inko",   "inko run fizzbuzz.inko"),
+    "cyclone":      ("cyclone", "cyclone -o $T/fizzbuzz fizzbuzz.cyc && $T/fizzbuzz"),
+    "seed7":        ("s7",     "s7 fizzbuzz"),
+
+    # ---- scripting -----------------------------------------------------------
+    "pike":         ("pike",   "pike fizzbuzz.pike"),
+    "squirrel":     ("sq",     "sq fizzbuzz.nut"),
+    "wren":         ("wren",   "wren fizzbuzz.wren"),
+    "janet":        ("janet",  "janet fizzbuzz.janet"),
+    "fennel":       ("fennel", "fennel fizzbuzz.fnl"),
+    "gdscript":     ("godot",  "godot --headless --script fizzbuzz.gd"),
+    "newlisp":      ("newlisp", "newlisp fizzbuzz.lsp"),
+    "nickle":       ("nickle", "nickle fizzbuzz.5c"),
+    "rescript":     (None, "needs a ReScript project build and a JS runtime"),
+
+    # ---- query languages -----------------------------------------------------
+    "sparql":       (None, "returns a SPARQL result table, not stdout lines"),
+    "cypher":       (None, "requires a Neo4j server; returns a result table"),
+    "tsql":         (None, "requires SQL Server; returns a result set"),
+    "plsql":        (None, "requires Oracle; DBMS_OUTPUT needs a client session"),
+
+    # ---- legacy ---------------------------------------------------------------
+    "bcpl":         ("cintsys", "cintsys -c fizzbuzz.b"),
+    "occam":        ("kroc",   "kroc fizzbuzz.occ -o $T/fizzbuzz && $T/fizzbuzz"),
+    "applescript":  (None, "requires macOS osascript"),
+    # ---- array languages -----------------------------------------------------
+    "uiua":         ("uiua",   "uiua run fizzbuzz.ua"),
+    "bqn":          ("bqn",    "bqn fizzbuzz.bqn"),
+
+    # ---- and one for the enterprise -----------------------------------------
+    "enterprise-java": ("javac", "javac -d $T $(find src -name '*.java') && "
+                                 "java -cp $T com.example.enterprise.fizzbuzz.FizzBuzzApplication"),
 }
 # fmt: on

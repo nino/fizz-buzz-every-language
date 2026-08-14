@@ -1,0 +1,25 @@
+%!PS
+% FizzBuzz in PostScript. Written for Ghostscript's stdout rather than a
+% page: `print` writes to the output stream, `=` would add a newline.
+/nl { (\n) print } def
+
+/fizzbuzz {
+  /n exch def
+  n 15 mod 0 eq {
+    (FizzBuzz) print
+  }{
+    n 3 mod 0 eq {
+      (Fizz) print
+    }{
+      n 5 mod 0 eq {
+        (Buzz) print
+      }{
+        n 20 string cvs print
+      } ifelse
+    } ifelse
+  } ifelse
+  nl
+} def
+
+1 1 100 { fizzbuzz } for
+quit

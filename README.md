@@ -1,10 +1,10 @@
 # FizzBuzz in every programming language
 
 FizzBuzz — print 1 to 100, but `Fizz` for multiples of 3, `Buzz` for multiples
-of 5, and `FizzBuzz` for multiples of 15 — implemented in **148 languages**,
+of 5, and `FizzBuzz` for multiples of 15 — implemented in **201 languages**,
 with a harness that actually runs them and checks the output.
 
-The point isn't the algorithm. It's what 148 languages look like when they're
+The point isn't the algorithm. It's what 201 languages look like when they're
 all solving the identical problem, side by side: where the `else` goes, whether
 integers convert to strings for free, and what "print a line" costs you.
 
@@ -36,7 +36,7 @@ python3 tools/generate_runners.py
 ```
 
 A runner exits `127` when its toolchain is missing, which the harness reports
-as SKIP rather than FAIL — no single machine has 148 toolchains on it.
+as SKIP rather than FAIL — no single machine has 201 toolchains on it.
 
 ## Status
 
@@ -44,21 +44,23 @@ On the container this was developed in:
 
 | | count |
 |---|---|
-| **Verified** — runs here and matches `expected.txt` byte for byte | 72 |
-| **Skipped** — toolchain not installed, implementation untested | 52 |
-| **Not runnable as a stdout program** — documented, see below | 24 |
+| **Verified** — runs here and matches `expected.txt` byte for byte | 94 |
+| **Skipped** — toolchain not installed, implementation untested | 77 |
+| **Not runnable as a stdout program** — documented, see below | 30 |
 
 Verified so far:
 
 `ada` `agda` `algol68` `asm-arm64` `asm-mips` `asm-riscv` `asm-x86-64` `ats`
 `awk` `bash` `basic` `bc` `befunge` `brainfuck` `c` `clojure` `cobol`
-`coffeescript` `common-lisp` `cpp` `csharp` `d` `dc` `elixir` `emacs-lisp`
-`erlang` `fish` `forth` `fortran` `fsharp` `go` `groovy` `haskell` `icon`
-`java` `javascript` `jsonnet` `llvm-ir` `lua` `m4` `make` `modula2` `nim`
-`objective-c` `ocaml` `octave` `ook` `pascal` `perl` `php` `prolog` `python`
-`r` `racket` `raku` `rexx` `ruby` `rust` `sass` `scala` `scheme` `sed` `sql`
-`systemverilog` `tcl` `typescript` `vala` `verilog` `vimscript` `whitespace`
-`xslt` `zsh`
+`coffeescript` `common-lisp` `cpp` `csharp` `d` `dash` `dc` `ed` `elixir`
+`elvish` `emacs-lisp` `enterprise-java` `erlang` `fish` `forth` `fortran`
+`fsharp` `gap` `go` `groff` `groovy` `haskell` `haxe` `icon` `java`
+`javascript` `jq` `jsonnet` `ksh` `llvm-ir` `lua` `m4` `make` `maxima`
+`minizinc` `modula2` `newlisp` `nickle` `nim` `objective-c` `ocaml` `octave`
+`ook` `pari-gp` `pascal` `perl` `php` `pike` `postscript` `prolog` `python`
+`r` `racket` `raku` `rexx` `ruby` `rust` `sass` `scala` `scheme` `sed`
+`shakespeare` `singular` `sql` `systemverilog` `tcl` `tcsh` `tex` `typescript`
+`vala` `verilog` `vimscript` `whitespace` `xonsh` `xslt` `yacas` `zsh`
 
 Everything else is written but unverified — the compiler simply wasn't
 available. Those are the ones most likely to contain a typo, so treat a SKIP
@@ -104,12 +106,36 @@ Befunge-93 *is* hand-written — an 8-row grid where `#v_` diverts the
 instruction pointer into each handler, and the handlers are traversed
 right-to-left so the string literals pop in the correct order.
 
+**Shakespeare** is a real play, and it runs. Romeo holds the counter, Juliet
+is whatever is about to be said, and since a line of dialogue addresses the
+*other* character on stage, the two take turns mutating each other. Every
+constant is a noun phrase — the noun carries the sign and each adjective
+doubles — so the letter `F` is written as a sum reaching 70. `FizzBuzz` needs
+no special scene: it speaks Fizz and then Buzz. There is no SPL compiler in
+any distro, so `tools/spl.py` interprets it.
+
+**ed** has no arithmetic, no variables and no loops, so its FizzBuzz is a pure
+text transformation: `seq` fills the buffer and one addressed substitution
+rewrites each line that needs a word. Every address is written out, because
+there is no way not to.
+
 The x86-64, ARM64 and RISC-V assembly is hand-written against raw Linux
 syscalls, and all three are verified — the non-native pair through
 `qemu-user` with the matching cross-assembler.
 
-Interpreters for these live in `tools/` (`bf.c`, `whitespace.py`,
-`befunge93.py`, `ook2bf.py`) so the harness doesn't depend on anything exotic.
+Interpreters and generators for these live in `tools/` (`bf.c`,
+`whitespace.py`, `befunge93.py`, `ook2bf.py`, `spl.py`, `gen_ed.py`) so the
+harness doesn't depend on anything exotic.
+
+### Enterprise Java
+
+`enterprise-java` is the same hundred lines by way of nineteen files across
+six packages: a Chain of Responsibility over prioritised rules, an Abstract
+Factory for the rule catalogue, a Template Method for the divisibility test,
+and constructor injection through a hand-rolled `ApplicationContext`. The
+`i % 15 == 0` that every other implementation writes inline is a class here,
+and its priority constant is what actually encodes "check this first". It
+compiles, and its output is byte-identical to everyone else's.
 
 ### Genuine gaps
 
@@ -120,9 +146,9 @@ Two entries are deliberately empty, with a `NOTES.md` explaining why:
   search.
 - **Piet** — programs are images, where block *area* encodes the integers.
 
-**Chef**, **Shakespeare** and **INTERCAL** are present but partial, also with
-notes. INTERCAL is the interesting one: `READ OUT` emits Roman numerals, so
-matching `expected.txt` needs a non-standard output routine.
+**Chef** and **INTERCAL** are present but partial, also with notes. INTERCAL
+is the interesting one: `READ OUT` emits Roman numerals, so matching
+`expected.txt` needs a non-standard output routine.
 
 A stub that doesn't run is worse than an honest gap, so there are no stubs.
 

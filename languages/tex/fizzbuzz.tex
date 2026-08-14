@@ -1,0 +1,46 @@
+% FizzBuzz in plain TeX.
+% TeX is a macro expander with integer registers. There is no modulo, so
+% "divisible by k" is computed as (i / k) * k = i, using \divide's integer
+% truncation. Output goes to a write stream rather than the terminal, so the
+% program's own lines are not tangled up with TeX's progress chatter.
+\newcount\i
+\newcount\tmp
+\newwrite\out
+\immediate\openout\out=fizzbuzz.out
+
+\def\emit#1{\immediate\write\out{#1}}
+
+% \divides{k} leaves \tmp equal to \i when k divides \i.
+\def\divides#1{\tmp=\i \divide\tmp by #1 \multiply\tmp by #1 }
+
+\def\fizzbuzz{%
+  \divides{15}%
+  \ifnum\tmp=\i
+    \emit{FizzBuzz}%
+  \else
+    \divides{3}%
+    \ifnum\tmp=\i
+      \emit{Fizz}%
+    \else
+      \divides{5}%
+      \ifnum\tmp=\i
+        \emit{Buzz}%
+      \else
+        \emit{\the\i}%
+      \fi
+    \fi
+  \fi
+}
+
+\def\fbloop{%
+  \ifnum\i<101
+    \fizzbuzz
+    \advance\i by 1
+    \expandafter\fbloop
+  \fi
+}
+
+\i=1
+\fbloop
+\immediate\closeout\out
+\end

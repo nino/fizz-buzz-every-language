@@ -1,0 +1,15 @@
+.\" FizzBuzz in groff (troff macros).
+.\" Number registers hold the arithmetic; \n[] reads one back. groff has no
+.\" "not equal" operator, so the branches are nested .ie/.el chains.
+.nf
+.nr i 1
+.while \n[i]<101 \{\
+.	nr m15 \n[i]%15
+.	nr m3 \n[i]%3
+.	nr m5 \n[i]%5
+.	ie \n[m15]=0 FizzBuzz
+.	el .ie \n[m3]=0 Fizz
+.	el .ie \n[m5]=0 Buzz
+.	el \n[i]
+.	nr i \n[i]+1
+.\}

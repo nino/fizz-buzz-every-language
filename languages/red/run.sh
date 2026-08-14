@@ -9,4 +9,5 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
+red --version 2>&1 | grep -qi 'GNU ed' && { echo 'PATH red is restricted ed, not the language' >&2; exit 127; }
 red fizzbuzz.red

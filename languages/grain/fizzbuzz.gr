@@ -1,0 +1,13 @@
+// FizzBuzz in Grain
+module Fizzbuzz
+
+from "list" include List
+
+let fizzbuzz = (n) => {
+  if (n % 15 == 0) "FizzBuzz"
+  else if (n % 3 == 0) "Fizz"
+  else if (n % 5 == 0) "Buzz"
+  else toString(n)
+}
+
+List.forEach((i) => print(fizzbuzz(i)), List.init(100, (i) => i + 1))
