@@ -34,7 +34,10 @@ for slug in "${targets[@]}"; do
   timeout "$TIMEOUT" "$runner" >"$out" 2>"$err" </dev/null
   rc=$?
 
-  if [[ $rc -eq 127 ]]; then
+  # Exit 127 means SKIP only when the runner said why. A bare 127 from a
+  # missing file deeper in the script is a real failure, not a missing
+  # toolchain -- that distinction once hid a broken vhdl build.
+  if [[ $rc -eq 127 ]] && grep -qE '^(missing toolchain:|not runnable here:|no postgres server|PATH )' "$err"; then
     printf '%-16s \033[33mSKIP\033[0m  %s\n' "$slug" "$(head -1 "$err")"
     skip+=("$slug")
   elif [[ $rc -ne 0 ]]; then

@@ -40,12 +40,14 @@ as SKIP rather than FAIL — no single machine has 201 toolchains on it.
 
 ## Status
 
-On the container this was developed in:
+On the container this was developed in. CI verifies a different 86 — between them, **107 of the 201 have actually run**; the two sets differ because neither machine has every toolchain.
+
+Locally:
 
 | | count |
 |---|---|
-| **Verified** — runs here and matches `expected.txt` byte for byte | 96 |
-| **Skipped** — toolchain not installed, implementation untested | 75 |
+| **Verified** — runs here and matches `expected.txt` byte for byte | 98 |
+| **Skipped** — toolchain not installed, implementation untested | 73 |
 | **Not runnable as a stdout program** — documented, see below | 30 |
 
 Verified so far:
@@ -59,8 +61,8 @@ Verified so far:
 `minizinc` `modula2` `newlisp` `nickle` `nim` `objective-c` `ocaml` `octave`
 `ook` `pari-gp` `pascal` `perl` `php` `pike` `postscript` `prolog` `python`
 `r` `racket` `raku` `rexx` `ruby` `rust` `sass` `scala` `scheme` `sed`
-`shakespeare` `singular` `sql` `systemverilog` `tcl` `tcsh` `tex` `typescript`
-`vala` `verilog` `vimscript` `whitespace` `xonsh` `xslt` `yacas` `zsh`
+`shakespeare` `singular` `sql` `standard-ml` `systemverilog` `tcl` `tcsh` `tex` `typescript`
+`vala` `verilog` `vhdl` `vimscript` `whitespace` `xonsh` `xslt` `yacas` `zsh`
 
 Everything else is written but unverified — the compiler simply wasn't
 available. Those are the ones most likely to contain a typo, so treat a SKIP

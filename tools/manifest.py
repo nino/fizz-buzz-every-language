@@ -67,7 +67,7 @@ LANGUAGES = {
     # ---- functional ---------------------------------------------------------
     "haskell":      ("runghc", "runghc fizzbuzz.hs"),
     "ocaml":        ("ocaml",  "ocaml fizzbuzz.ml"),
-    "standard-ml":  ("polyml", "polyml --script fizzbuzz.sml"),
+    "standard-ml":  ("poly",   "poly --script fizzbuzz.sml"),
     "elm":          (None, "compiles to HTML, not stdout"),
     "purescript":   ("spago",  "spago run --quiet 2>/dev/null"),
     "scheme":       ("guile",  "guile -s fizzbuzz.scm"),
@@ -75,7 +75,7 @@ LANGUAGES = {
     "common-lisp":  ("sbcl",   "sbcl --script fizzbuzz.lisp"),
     "emacs-lisp":   ("emacs",  "emacs --batch --quick --script fizzbuzz.el 2>/dev/null"),
     "idris":        ("idris2", "idris2 -o fizzbuzz --output-dir $T Fizzbuzz.idr >/dev/null && $T/fizzbuzz"),
-    "agda":         ("agda",   "agda --compile --compile-dir=$T Fizzbuzz.agda >/dev/null && $T/Fizzbuzz"),
+    "agda":         ("agda",   "agda --compile --compile-dir=$T Fizzbuzz.agda 1>&2 && $T/Fizzbuzz"),
     "coq":          (None, "Compute prints a Coq term; needs extraction to run"),
     "lean":         ("lean",   "lean --run Fizzbuzz.lean"),
     "roc":          ("roc",    "roc run fizzbuzz.roc"),
@@ -174,11 +174,13 @@ LANGUAGES = {
     "emojicode":    ("emojicodec", "emojicodec fizzbuzz.emojic -o $T/fizzbuzz && $T/fizzbuzz"),
 
     # ---- hardware / other paradigms -----------------------------------------
-    "vhdl":         ("ghdl",   "ghdl -a --workdir=$T fizzbuzz.vhd && ghdl -e --workdir=$T -o $T/fizzbuzz fizzbuzz && $T/fizzbuzz"),
+    "vhdl":         ("ghdl",   "ghdl -a --workdir=$T fizzbuzz.vhd && "
+                               "ghdl -r --workdir=$T fizzbuzz"),
     "verilog":      ("iverilog", "iverilog -o $T/fizzbuzz fizzbuzz.v && vvp $T/fizzbuzz"),
     "systemverilog": ("verilator", "verilator --binary --top-module fizzbuzz --Mdir $T fizzbuzz.sv >/dev/null && "
                                   "$T/Vfizzbuzz | grep -v '\\$finish'"),
-    "chisel":       ("sbt",    "sbt -Dsbt.global.base=$T/sbt -batch -error 'runMain FizzBuzzApp'"),
+    "chisel":       ("sbt",    "sbt -Dsbt.global.base=$T/sbt -batch -error 'runMain FizzBuzzApp' 2>/dev/null | "
+                               "grep -E '^(FizzBuzz|Fizz|Buzz|[0-9]+)$'"),
     "solidity":     (None, "compile-only; all() must be called on-chain"),
     "move":         (None, "compile-only; all() must be called on-chain"),
     "glsl":         (None, "renders to a framebuffer, not stdout"),

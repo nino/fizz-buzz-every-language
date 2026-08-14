@@ -9,4 +9,4 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-ghdl -a --workdir=$T fizzbuzz.vhd && ghdl -e --workdir=$T -o $T/fizzbuzz fizzbuzz && $T/fizzbuzz
+ghdl -a --workdir=$T fizzbuzz.vhd && ghdl -r --workdir=$T fizzbuzz

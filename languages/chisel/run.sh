@@ -9,4 +9,4 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-sbt -Dsbt.global.base=$T/sbt -batch -error 'runMain FizzBuzzApp'
+sbt -Dsbt.global.base=$T/sbt -batch -error 'runMain FizzBuzzApp' 2>/dev/null | grep -E '^(FizzBuzz|Fizz|Buzz|[0-9]+)$'

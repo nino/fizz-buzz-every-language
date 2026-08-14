@@ -63,6 +63,11 @@ jobs:
             chicken-bin nickle
             bc dc m4 xsltproc jsonnet
             binutils-aarch64-linux-gnu binutils-riscv64-linux-gnu qemu-user
+            # added with the second batch of languages
+            erlang-base erlang-dev elixir nim racket
+            texlive-latex-base texlive-plain-generic ghostscript
+            maxima pari-gp gap singular yacas minizinc
+            pike8.0 haxe newlisp elvish ksh tcsh
           )
           for p in "${packages[@]}"; do
             sudo apt-get install -y --no-install-recommends "$p" >/dev/null 2>&1 \
@@ -91,10 +96,15 @@ jobs:
 
       - name: Install npm and dotnet toolchains
         run: |
-          for pkg in coffeescript sass purescript spago; do
+          for pkg in coffeescript sass purescript spago bun fennel; do
             npm install -g "$pkg" >/dev/null 2>&1 \
               && echo "ok   npm $pkg" || echo "::warning::npm install $pkg failed"
           done
+
+      - name: Install pip toolchains
+        run: |
+          pip3 install --break-system-packages xonsh >/dev/null 2>&1 \
+            && echo "ok   xonsh" || echo "::warning::pip install xonsh failed"
 
       # ------------------------------------------------------------ tarballs --
       # Everything below is a pinned release archive. Each install is
