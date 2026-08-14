@@ -12,6 +12,14 @@ on:
           Leave empty to run everything.
         required: false
         default: ""
+      toolchains:
+        description: >-
+          How much to install. "apt" is quick; "common" adds the tarball
+          languages; "all" adds the slow ones (Swift, Lean, Nix).
+        type: choice
+        required: true
+        default: common
+        options: [apt, common, all]
       verbose:
         description: "Show a diff for each failure"
         type: boolean
@@ -21,39 +29,187 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
+
+    env:
+      # Pinned so a run is reproducible. Bump deliberately; a moving "latest"
+      # turns an unrelated upstream release into a mystery CI failure.
+      ZIG_VERSION: "0.13.0"
+      JULIA_VERSION: "1.10.4"
+      KOTLIN_VERSION: "2.0.20"
+      GLEAM_VERSION: "1.5.1"
+      WASMTIME_VERSION: "24.0.0"
+      NUSHELL_VERSION: "0.97.1"
+      FACTOR_VERSION: "0.99"
+      SBT_VERSION: "1.10.1"
+      ODIN_VERSION: "dev-2024-09"
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install toolchains
+      # ---------------------------------------------------------------- apt --
+      - name: Install apt toolchains
         run: |
           sudo apt-get update
-          # Installed one at a time: apt is atomic, so a single package that is
-          # unavailable on the runner image would otherwise drop all of them.
+          # One package at a time: apt is atomic, so a single name that is
+          # unavailable on this runner image would otherwise drop all of them.
           packages=(
-            gnat gnucobol4 sbcl clisp guile-3.0 gforth ghc ocaml-nox
-            gfortran fp-compiler mono-mcs mono-runtime scala groovy
+            gnat gnucobol4 sbcl clisp guile-3.0 gforth ghc ocaml-nox polyml
+            gfortran fp-compiler gdc gm2 valac algol68g bwbasic spim
+            mono-mcs mono-runtime scala groovy clojure rakudo
             lua5.4 tcl sqlite3 gawk r-base-core swi-prolog octave
             regina-rexx icont iconx nasm wabt emacs-nox zsh fish
+            agda coq ghdl iverilog verilator glslang-tools ats2-lang
+            chicken-bin nickle
             bc dc m4 xsltproc jsonnet
+            binutils-aarch64-linux-gnu binutils-riscv64-linux-gnu qemu-user
           )
           for p in "${packages[@]}"; do
-            sudo apt-get install -y --no-install-recommends "$p" \
-              || echo "::warning::could not install $p"
+            sudo apt-get install -y --no-install-recommends "$p" >/dev/null 2>&1 \
+              && echo "ok   $p" || echo "::warning::could not install $p"
           done
 
-      - name: Show what is available
+      - name: Install npm and dotnet toolchains
         run: |
-          echo "### Toolchains" >> "$GITHUB_STEP_SUMMARY"
-          for c in gcc g++ rustc go python3 ruby perl php node java; do
-            printf '%s: %s\n' "$c" "$(command -v "$c" || echo missing)" \
-              >> "$GITHUB_STEP_SUMMARY"
+          for pkg in coffeescript sass purescript spago; do
+            npm install -g "$pkg" >/dev/null 2>&1 \
+              && echo "ok   npm $pkg" || echo "::warning::npm install $pkg failed"
           done
+
+      # ------------------------------------------------------------ tarballs --
+      # Everything below is a pinned release archive. Each install is
+      # non-fatal: an upstream URL that has moved should downgrade that one
+      # language to SKIP, not fail the whole run.
+      - name: Install tarball toolchains (common)
+        if: inputs.toolchains != 'apt'
+        run: |
+          set -u
+          ROOT="$HOME/toolchains"; mkdir -p "$ROOT"
+
+          # fetch <name> <url> -- unpacks into $ROOT/<name>, stripping the
+          # single top-level directory that these archives all carry.
+          fetch() {
+            local name=$1 url=$2 dest="$ROOT/$1"
+            mkdir -p "$dest"
+            if ! curl -fsSL --retry 3 --retry-delay 2 -o "/tmp/$name.ar" "$url"; then
+              echo "::warning::download failed: $name ($url)"; return 1
+            fi
+            case "$url" in
+              *.zip)
+                unzip -q "/tmp/$name.ar" -d "/tmp/$name.d" || return 1
+                # move the contents of the sole top-level dir, if there is one
+                local inner; inner=$(find "/tmp/$name.d" -mindepth 1 -maxdepth 1 -type d | head -1)
+                if [ "$(find "/tmp/$name.d" -mindepth 1 -maxdepth 1 | wc -l)" = 1 ] && [ -n "$inner" ]; then
+                  mv "$inner"/* "$dest"/
+                else
+                  mv "/tmp/$name.d"/* "$dest"/
+                fi
+                ;;
+              *) tar -xf "/tmp/$name.ar" -C "$dest" --strip-components=1 || return 1 ;;
+            esac
+            echo "ok   $name"
+          }
+
+          add_path() { echo "$1" >> "$GITHUB_PATH"; }
+
+          fetch zig "https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz" \
+            && add_path "$ROOT/zig"
+
+          fetch julia "https://julialang-s3.julialang.org/bin/linux/x64/${JULIA_VERSION%.*}/julia-${JULIA_VERSION}-linux-x86_64.tar.gz" \
+            && add_path "$ROOT/julia/bin"
+
+          fetch kotlin "https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION}/kotlin-compiler-${KOTLIN_VERSION}.zip" \
+            && add_path "$ROOT/kotlin/bin"
+
+          fetch gleam "https://github.com/gleam-lang/gleam/releases/download/v${GLEAM_VERSION}/gleam-v${GLEAM_VERSION}-x86_64-unknown-linux-musl.tar.gz" \
+            && add_path "$ROOT/gleam"
+
+          fetch wasmtime "https://github.com/bytecodealliance/wasmtime/releases/download/v${WASMTIME_VERSION}/wasmtime-v${WASMTIME_VERSION}-x86_64-linux.tar.xz" \
+            && add_path "$ROOT/wasmtime"
+
+          fetch nushell "https://github.com/nushell/nushell/releases/download/${NUSHELL_VERSION}/nu-${NUSHELL_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            && add_path "$ROOT/nushell"
+
+          fetch sbt "https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.tgz" \
+            && add_path "$ROOT/sbt/bin"
+
+          # Factor must come before /usr/bin, where coreutils' `factor` lives.
+          if fetch factor "https://downloads.factorcode.org/releases/${FACTOR_VERSION}/factor-linux-x86-64-${FACTOR_VERSION}.tar.gz"; then
+            add_path "$ROOT/factor"
+          fi
+
+          fetch vlang "https://github.com/vlang/v/releases/latest/download/v_linux.zip" \
+            && { (cd "$ROOT/vlang" && ./v symlink >/dev/null 2>&1) || add_path "$ROOT/vlang"; }
+
+          fetch odin "https://github.com/odin-lang/Odin/releases/download/${ODIN_VERSION}/odin-ubuntu-amd64-${ODIN_VERSION}.zip" \
+            && add_path "$ROOT/odin"
+
+      - name: Install Dart and Crystal (apt repositories)
+        if: inputs.toolchains != 'apt'
+        run: |
+          # Dart
+          if curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub \
+               | sudo gpg --dearmor -o /usr/share/keyrings/dart.gpg 2>/dev/null; then
+            echo "deb [signed-by=/usr/share/keyrings/dart.gpg arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian stable main" \
+              | sudo tee /etc/apt/sources.list.d/dart.list >/dev/null
+          fi
+          # Crystal
+          curl -fsSL https://crystal-lang.org/install.sh | sudo bash >/dev/null 2>&1 \
+            || echo "::warning::crystal install script failed"
+          sudo apt-get update >/dev/null 2>&1 || true
+          for p in dart crystal; do
+            sudo apt-get install -y --no-install-recommends "$p" >/dev/null 2>&1 \
+              && echo "ok   $p" || echo "::warning::could not install $p"
+          done
+
+      # ------------------------------------------------------------ slow set --
+      - name: Install slow toolchains (Swift, Lean, Nix)
+        if: inputs.toolchains == 'all'
+        run: |
+          set -u
+          # Lean via elan
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain stable >/dev/null 2>&1 \
+            && echo "$HOME/.elan/bin" >> "$GITHUB_PATH" \
+            || echo "::warning::elan (Lean) install failed"
+
+          # Nix, single-user
+          curl -fsSL https://nixos.org/nix/install | sh -s -- --no-daemon >/dev/null 2>&1 \
+            && echo "$HOME/.nix-profile/bin" >> "$GITHUB_PATH" \
+            || echo "::warning::nix install failed"
+
+          # Swift
+          SWIFT_VERSION=5.10.1
+          SWIFT_URL="https://download.swift.org/swift-${SWIFT_VERSION}-release/ubuntu2404/swift-${SWIFT_VERSION}-RELEASE/swift-${SWIFT_VERSION}-RELEASE-ubuntu24.04.tar.gz"
+          sudo apt-get install -y --no-install-recommends \
+            binutils libcurl4-openssl-dev libpython3-dev libxml2-dev >/dev/null 2>&1 || true
+          mkdir -p "$HOME/toolchains/swift"
+          if curl -fsSL --retry 3 -o /tmp/swift.tar.gz "$SWIFT_URL"; then
+            tar -xzf /tmp/swift.tar.gz -C "$HOME/toolchains/swift" --strip-components=1
+            echo "$HOME/toolchains/swift/usr/bin" >> "$GITHUB_PATH"
+            echo "ok   swift"
+          else
+            echo "::warning::swift download failed ($SWIFT_URL)"
+          fi
+
+      # ---------------------------------------------------------------- run --
+      - name: Report what is available
+        run: |
+          {
+            echo "### Toolchains found"
+            echo '```'
+            for c in gcc g++ rustc go python3 ruby perl php node java \
+                     zig julia kotlinc gleam wasmtime nu factor dart crystal \
+                     swift lean nix-instantiate v odin sbt spago pwsh; do
+              printf '%-16s %s\n' "$c" "$(command -v "$c" || echo '-')"
+            done
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Run the suite
         env:
           VERBOSE: ${{ inputs.verbose && '1' || '' }}
+          TIMEOUT: "300"
         run: |
           # Unquoted on purpose: an empty input must expand to no arguments.
           tools/run-all.sh ${{ inputs.languages }} | tee /tmp/results.txt
@@ -66,4 +222,10 @@ jobs:
             echo '```'
             sed 's/\x1b\[[0-9;]*m//g' /tmp/results.txt | tail -5
             echo '```'
+            echo "<details><summary>Full output</summary>"
+            echo
+            echo '```'
+            sed 's/\x1b\[[0-9;]*m//g' /tmp/results.txt
+            echo '```'
+            echo "</details>"
           } >> "$GITHUB_STEP_SUMMARY"

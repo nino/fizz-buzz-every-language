@@ -131,7 +131,26 @@ A stub that doesn't run is worse than an honest gap, so there are no stubs.
 [`.github/workflows/test.yml`](.github/workflows/test.yml) runs the suite, and
 is **manual only** (`workflow_dispatch`) — it installs a large pile of
 compilers, so it isn't something you want firing on every push. Run it from
-the Actions tab; optionally pass a space-separated list of languages.
+the Actions tab.
+
+Inputs:
+
+| input | effect |
+|---|---|
+| `languages` | space-separated subset, e.g. `python c rust`; empty runs everything |
+| `toolchains` | `apt` (quick) · `common` (+ tarball languages) · `all` (+ Swift, Lean, Nix) |
+| `verbose` | show a diff for each failure |
+
+The GitHub runner can reach hosts this development container can't, which is
+the point of the `common` and `all` tiers: Zig, Julia, Kotlin, Gleam, Dart,
+Crystal, V, Odin, Nushell, Factor, wasmtime, sbt and Swift are all installed
+from pinned release archives. Each download is **non-fatal** — an upstream URL
+that has moved downgrades that one language to SKIP instead of failing the
+run, and leaves a warning annotation.
+
+Versions are pinned in the workflow's `env:` block rather than tracking
+`latest`, so an unrelated upstream release can't turn into a mystery failure.
+Bump them deliberately.
 
 ## Adding a language
 

@@ -10,4 +10,4 @@ T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
 factor --version 2>&1 | grep -qi coreutils && { echo 'PATH factor is coreutils, not the language' >&2; exit 127; }
-factor fizzbuzz.factor
+factor -script fizzbuzz.factor

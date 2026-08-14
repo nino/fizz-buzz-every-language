@@ -9,4 +9,4 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-sbt 'runMain FizzBuzzApp'
+sbt -Dsbt.global.base=$T/sbt -batch -error 'runMain FizzBuzzApp'

@@ -9,4 +9,4 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-gleam run
+gleam run 2>/dev/null

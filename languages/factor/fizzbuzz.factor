@@ -1,5 +1,5 @@
-! FizzBuzz in Factor
-USING: io kernel math math.functions math.parser math.ranges sequences ;
+! FizzBuzz in Factor, as a standalone script (run with: factor -script).
+USING: io kernel math math.parser ranges sequences ;
 IN: fizzbuzz
 
 : fizzbuzz ( n -- str )
@@ -9,6 +9,4 @@ IN: fizzbuzz
         ] if
     ] if ;
 
-: main ( -- ) 100 [1,b] [ fizzbuzz print ] each ;
-
-MAIN: main
+100 [1..b] [ fizzbuzz print ] each

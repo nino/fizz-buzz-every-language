@@ -69,7 +69,7 @@ LANGUAGES = {
     "ocaml":        ("ocaml",  "ocaml fizzbuzz.ml"),
     "standard-ml":  ("polyml", "polyml --script fizzbuzz.sml"),
     "elm":          (None, "compiles to HTML, not stdout"),
-    "purescript":   ("spago",  "spago run"),
+    "purescript":   ("spago",  "spago run --quiet 2>/dev/null"),
     "scheme":       ("guile",  "guile -s fizzbuzz.scm"),
     "racket":       ("racket", "racket fizzbuzz.rkt"),
     "common-lisp":  ("sbcl",   "sbcl --script fizzbuzz.lisp"),
@@ -79,7 +79,7 @@ LANGUAGES = {
     "coq":          (None, "Compute prints a Coq term; needs extraction to run"),
     "lean":         ("lean",   "lean --run Fizzbuzz.lean"),
     "roc":          ("roc",    "roc run fizzbuzz.roc"),
-    "gleam":        ("gleam",  "gleam run"),
+    "gleam":        ("gleam",  "gleam run 2>/dev/null"),
     "unison":       ("ucm",    "ucm run.file fizzbuzz.u main"),
 
     # ---- shell / glue -------------------------------------------------------
@@ -178,7 +178,7 @@ LANGUAGES = {
     "verilog":      ("iverilog", "iverilog -o $T/fizzbuzz fizzbuzz.v && vvp $T/fizzbuzz"),
     "systemverilog": ("verilator", "verilator --binary --top-module fizzbuzz --Mdir $T fizzbuzz.sv >/dev/null && "
                                   "$T/Vfizzbuzz | grep -v '\\$finish'"),
-    "chisel":       ("sbt",    "sbt 'runMain FizzBuzzApp'"),
+    "chisel":       ("sbt",    "sbt -Dsbt.global.base=$T/sbt -batch -error 'runMain FizzBuzzApp'"),
     "solidity":     (None, "compile-only; all() must be called on-chain"),
     "move":         (None, "compile-only; all() must be called on-chain"),
     "glsl":         (None, "renders to a framebuffer, not stdout"),
@@ -190,7 +190,7 @@ LANGUAGES = {
     "io":           ("io",     "io fizzbuzz.io"),
     "factor":       ("factor", "factor --version 2>&1 | grep -qi coreutils && "
                                "{ echo 'PATH factor is coreutils, not the language' >&2; exit 127; }\n"
-                               "factor fizzbuzz.factor"),
+                               "factor -script fizzbuzz.factor"),
     "red":          ("red",    "red fizzbuzz.red"),
     "ats":          ("patscc", "patscc -o $T/fizzbuzz fizzbuzz.dats && $T/fizzbuzz"),
 }
