@@ -44,18 +44,21 @@ On the container this was developed in:
 
 | | count |
 |---|---|
-| **Verified** — runs here and matches `expected.txt` byte for byte | 53 |
-| **Skipped** — toolchain not installed, implementation untested | 73 |
-| **Not runnable as a stdout program** — documented, see below | 22 |
+| **Verified** — runs here and matches `expected.txt` byte for byte | 72 |
+| **Skipped** — toolchain not installed, implementation untested | 52 |
+| **Not runnable as a stdout program** — documented, see below | 24 |
 
 Verified so far:
 
-`ada` `asm-x86-64` `awk` `bash` `bc` `befunge` `brainfuck` `c` `cobol`
-`common-lisp` `cpp` `csharp` `dc` `elixir` `emacs-lisp` `erlang` `fish`
-`forth` `fortran` `go` `groovy` `haskell` `icon` `java` `javascript` `llvm-ir`
-`lua` `m4` `make` `nim` `objective-c` `ocaml` `octave` `ook` `pascal` `perl`
-`php` `prolog` `python` `r` `racket` `rexx` `ruby` `rust` `scala` `scheme`
-`sed` `sql` `tcl` `typescript` `vimscript` `whitespace` `zsh`
+`ada` `agda` `algol68` `asm-arm64` `asm-mips` `asm-riscv` `asm-x86-64` `ats`
+`awk` `bash` `basic` `bc` `befunge` `brainfuck` `c` `clojure` `cobol`
+`coffeescript` `common-lisp` `cpp` `csharp` `d` `dc` `elixir` `emacs-lisp`
+`erlang` `fish` `forth` `fortran` `fsharp` `go` `groovy` `haskell` `icon`
+`java` `javascript` `jsonnet` `llvm-ir` `lua` `m4` `make` `modula2` `nim`
+`objective-c` `ocaml` `octave` `ook` `pascal` `perl` `php` `prolog` `python`
+`r` `racket` `raku` `rexx` `ruby` `rust` `sass` `scala` `scheme` `sed` `sql`
+`systemverilog` `tcl` `typescript` `vala` `verilog` `vimscript` `whitespace`
+`xslt` `zsh`
 
 Everything else is written but unverified — the compiler simply wasn't
 available. Those are the ones most likely to contain a typo, so treat a SKIP
@@ -74,6 +77,9 @@ make the harness lie. These exit 127 with a reason instead:
 - **ABAP** needs SAP NetWeaver; **RPG** needs IBM i; **6502 / Z80 / MIPS**
   assembly need emulators.
 - **Datalog / clingo / CUE** produce a relation or a value, not ordered text.
+- **Coq**'s `Compute` prints a term, not lines — real output needs extraction.
+- **UCBLogo** writes to its own GUI text window rather than stdout.
+- **Batch** needs a real `cmd.exe`; the wine here is 64-bit only.
 
 ### Written by machine, on purpose
 
@@ -97,6 +103,10 @@ run, and all three are verified:
 Befunge-93 *is* hand-written — an 8-row grid where `#v_` diverts the
 instruction pointer into each handler, and the handlers are traversed
 right-to-left so the string literals pop in the correct order.
+
+The x86-64, ARM64 and RISC-V assembly is hand-written against raw Linux
+syscalls, and all three are verified — the non-native pair through
+`qemu-user` with the matching cross-assembler.
 
 Interpreters for these live in `tools/` (`bf.c`, `whitespace.py`,
 `befunge93.py`, `ook2bf.py`) so the harness doesn't depend on anything exotic.

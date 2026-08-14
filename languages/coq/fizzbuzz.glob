@@ -1,0 +1,61 @@
+DIGEST 05cce8e6bc64227340fc3a428c587e97
+Ffizzbuzz
+R90:94 Coq.Arith.Arith <> <> lib
+R112:117 Coq.Strings.String <> <> lib
+R135:138 Coq.Lists.List <> <> lib
+R148:160 Coq.Lists.List ListNotations <> mod
+def 198:214 <> nat_to_string_aux
+R226:228 Coq.Init.Datatypes <> nat ind
+binder 217:220 <> fuel:1
+binder 222:222 <> n:2
+R238:243 Coq.Strings.String <> string ind
+binder 232:234 <> acc:3
+R248:253 Coq.Strings.String <> string ind
+R266:269 fizzbuzz <> fuel:1 var
+R285:287 fizzbuzz <> acc:3 var
+R293:293 Coq.Init.Datatypes <> S constr
+R313:318 Coq.Strings.String <> String constr
+R321:338 Coq.Strings.Ascii <> ascii_of_nat def
+R343:345 Coq.Init.Peano <> ::nat_scope:x_'+'_x not
+R346:355 Coq.Arith.PeanoNat Nat modulo def
+R357:357 fizzbuzz <> n:2 var
+R364:374 Coq.Strings.String <> EmptyString constr
+binder 308:308 <> d:6
+R389:395 Coq.Arith.PeanoNat Nat div def
+R397:397 fizzbuzz <> n:2 var
+R418:423 Coq.Strings.String <> append def
+R425:425 fizzbuzz <> d:6 var
+R427:429 fizzbuzz <> acc:3 var
+R442:458 fizzbuzz <> nat_to_string_aux:4 def
+R465:470 Coq.Strings.String <> append def
+R472:472 fizzbuzz <> d:6 var
+R474:476 fizzbuzz <> acc:3 var
+def 506:518 <> nat_to_string
+R525:527 Coq.Init.Datatypes <> nat ind
+binder 521:521 <> n:7
+R532:537 Coq.Strings.String <> string ind
+R544:560 fizzbuzz <> nat_to_string_aux def
+R565:565 fizzbuzz <> n:7 var
+R567:577 Coq.Strings.String <> EmptyString constr
+def 592:599 <> fizzbuzz
+R606:608 Coq.Init.Datatypes <> nat ind
+binder 602:602 <> n:8
+R613:618 Coq.Strings.String <> string ind
+R628:634 Coq.Arith.PeanoNat Nat eqb def
+R637:646 Coq.Arith.PeanoNat Nat modulo def
+R648:648 fizzbuzz <> n:8 var
+R682:688 Coq.Arith.PeanoNat Nat eqb def
+R691:700 Coq.Arith.PeanoNat Nat modulo def
+R702:702 fizzbuzz <> n:8 var
+R731:737 Coq.Arith.PeanoNat Nat eqb def
+R740:749 Coq.Arith.PeanoNat Nat modulo def
+R751:751 fizzbuzz <> n:8 var
+R777:789 fizzbuzz <> nat_to_string def
+R791:791 fizzbuzz <> n:8 var
+def 806:812 <> results
+R816:819 Coq.Init.Datatypes <> list ind
+R821:826 Coq.Strings.String <> string ind
+R831:833 Coq.Lists.List <> map def
+R845:847 Coq.Lists.List <> seq def
+R835:842 fizzbuzz <> fizzbuzz def
+R866:872 fizzbuzz <> results def

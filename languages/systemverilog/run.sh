@@ -9,4 +9,4 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-verilator --binary --top-module fizzbuzz --Mdir $T fizzbuzz.sv >/dev/null && $T/Vfizzbuzz
+verilator --binary --top-module fizzbuzz --Mdir $T fizzbuzz.sv >/dev/null && $T/Vfizzbuzz | grep -v '\$finish'

@@ -9,4 +9,4 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-bwbasic fizzbuzz.bas
+bwbasic fizzbuzz.bas </dev/null | tr -d '\r' | sed -e '1,4d' | grep -v '^bwBASIC:'

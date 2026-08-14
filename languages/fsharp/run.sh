@@ -9,4 +9,4 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-dotnet fsi --use:fizzbuzz.fsx
+dotnet fsi fizzbuzz.fsx

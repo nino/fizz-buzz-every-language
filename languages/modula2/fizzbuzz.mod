@@ -1,7 +1,7 @@
 MODULE fizzbuzz;
 
 FROM STextIO IMPORT WriteString, WriteLn;
-FROM SWholeIO IMPORT WriteInt;
+FROM SWholeIO IMPORT WriteCard;
 
 VAR i: CARDINAL;
 
@@ -14,7 +14,7 @@ BEGIN
     ELSIF i MOD 5 = 0 THEN
       WriteString("Buzz"); WriteLn;
     ELSE
-      WriteInt(i, 0); WriteLn;
+      WriteCard(i, 0); WriteLn;
     END;
   END;
 END fizzbuzz.

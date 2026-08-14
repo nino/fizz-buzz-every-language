@@ -31,7 +31,7 @@ for slug in "${targets[@]}"; do
 
   out="$(mktemp)"
   err="$(mktemp)"
-  timeout "$TIMEOUT" "$runner" >"$out" 2>"$err"
+  timeout "$TIMEOUT" "$runner" >"$out" 2>"$err" </dev/null
   rc=$?
 
   if [[ $rc -eq 127 ]]; then

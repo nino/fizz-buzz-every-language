@@ -9,4 +9,4 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-clojure -M fizzbuzz.clj
+clojure fizzbuzz.clj

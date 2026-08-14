@@ -41,10 +41,10 @@ LANGUAGES = {
     "kotlin":       ("kotlinc", "kotlinc fizzbuzz.kt -include-runtime -d $T/fb.jar 2>/dev/null && java -jar $T/fb.jar"),
     "scala":        ("scalac", "scalac -d $T fizzbuzz.scala && scala -cp $T FizzBuzz"),
     "groovy":       ("groovy", "groovy fizzbuzz.groovy"),
-    "clojure":      ("clojure", "clojure -M fizzbuzz.clj"),
+    "clojure":      ("clojure", "clojure fizzbuzz.clj"),
     "ceylon":       ("ceylon", "ceylon run --compile=force fizzbuzz"),
     "csharp":       ("mcs",    "mcs -out:$T/fizzbuzz.exe Fizzbuzz.cs && mono $T/fizzbuzz.exe"),
-    "fsharp":       ("dotnet", "dotnet fsi --use:fizzbuzz.fsx"),
+    "fsharp":       ("dotnet", "dotnet fsi fizzbuzz.fsx"),
     "vbnet":        ("vbnc",   "vbnc -out:$T/fizzbuzz.exe Fizzbuzz.vb >/dev/null && mono $T/fizzbuzz.exe"),
 
     # ---- scripting / dynamic ------------------------------------------------
@@ -76,7 +76,7 @@ LANGUAGES = {
     "emacs-lisp":   ("emacs",  "emacs --batch --quick --script fizzbuzz.el 2>/dev/null"),
     "idris":        ("idris2", "idris2 -o fizzbuzz --output-dir $T Fizzbuzz.idr >/dev/null && $T/fizzbuzz"),
     "agda":         ("agda",   "agda --compile --compile-dir=$T Fizzbuzz.agda >/dev/null && $T/Fizzbuzz"),
-    "coq":          ("coqc",   "coqc -q fizzbuzz.v"),
+    "coq":          (None, "Compute prints a Coq term; needs extraction to run"),
     "lean":         ("lean",   "lean --run Fizzbuzz.lean"),
     "roc":          ("roc",    "roc run fizzbuzz.roc"),
     "gleam":        ("gleam",  "gleam run"),
@@ -87,7 +87,7 @@ LANGUAGES = {
     "zsh":          ("zsh",    "zsh fizzbuzz.zsh"),
     "fish":         ("fish",   "fish fizzbuzz.fish"),
     "powershell":   ("pwsh",   "pwsh -NoProfile -File fizzbuzz.ps1"),
-    "batch":        ("wine",   "wine cmd /c fizzbuzz.bat"),
+    "batch":        (None, "requires Windows cmd.exe (wine32 not available)"),
     "nushell":      ("nu",     "nu fizzbuzz.nu"),
     "awk":          ("awk",    "awk -f fizzbuzz.awk </dev/null"),
     "sed":          ("sed",    "seq 1 100 | sed -f fizzbuzz.sed"),
@@ -129,9 +129,9 @@ LANGUAGES = {
     # ---- legacy / historical ------------------------------------------------
     "cobol":        ("cobc",   "cobc -x -free -o $T/fizzbuzz fizzbuzz.cob && $T/fizzbuzz"),
     "algol68":      ("a68g",   "a68g fizzbuzz.a68"),
-    "basic":        ("bwbasic", "bwbasic fizzbuzz.bas"),
+    "basic":        ("bwbasic", "bwbasic fizzbuzz.bas </dev/null | tr -d '\\r' | sed -e '1,4d' | grep -v '^bwBASIC:'"),
     "qbasic":       ("qb64",   "qb64 -x fizzbuzz.bas -o $T/fizzbuzz && $T/fizzbuzz"),
-    "logo":         ("logo",   "logo fizzbuzz.lgo"),
+    "logo":         (None, "ucblogo writes to its GUI text window, not stdout"),
     "forth":        ("gforth", "gforth fizzbuzz.fth"),
     "smalltalk":    ("gst",    "gst fizzbuzz.st"),
     "eiffel":       ("ec",     "ec -batch -config fizzbuzz.ecf"),
@@ -151,7 +151,7 @@ LANGUAGES = {
     "asm-x86-64":   ("as",     "as -o $T/fb.o fizzbuzz.s && ld -o $T/fizzbuzz $T/fb.o && $T/fizzbuzz"),
     "asm-arm64":    ("aarch64-linux-gnu-as", "aarch64-linux-gnu-as -o $T/fb.o fizzbuzz.s && aarch64-linux-gnu-ld -o $T/fizzbuzz $T/fb.o && qemu-aarch64 $T/fizzbuzz"),
     "asm-riscv":    ("riscv64-linux-gnu-as", "riscv64-linux-gnu-as -o $T/fb.o fizzbuzz.s && riscv64-linux-gnu-ld -o $T/fizzbuzz $T/fb.o && qemu-riscv64 $T/fizzbuzz"),
-    "asm-mips":     (None, "requires the MARS or SPIM simulator"),
+    "asm-mips":     ("spim",   "spim -file fizzbuzz.s | sed -e '1,5d'"),
     "asm-6502":     (None, "assemble with ca65/acme, run in a C64 emulator"),
     "asm-z80":      (None, "assemble with z80asm, run under a CP/M emulator"),
     "wasm-wat":     ("wasmtime", "command -v wat2wasm >/dev/null || { echo 'missing toolchain: wat2wasm' >&2; exit 127; }\n"
@@ -176,7 +176,8 @@ LANGUAGES = {
     # ---- hardware / other paradigms -----------------------------------------
     "vhdl":         ("ghdl",   "ghdl -a --workdir=$T fizzbuzz.vhd && ghdl -e --workdir=$T -o $T/fizzbuzz fizzbuzz && $T/fizzbuzz"),
     "verilog":      ("iverilog", "iverilog -o $T/fizzbuzz fizzbuzz.v && vvp $T/fizzbuzz"),
-    "systemverilog": ("verilator", "verilator --binary --top-module fizzbuzz --Mdir $T fizzbuzz.sv >/dev/null && $T/Vfizzbuzz"),
+    "systemverilog": ("verilator", "verilator --binary --top-module fizzbuzz --Mdir $T fizzbuzz.sv >/dev/null && "
+                                  "$T/Vfizzbuzz | grep -v '\\$finish'"),
     "chisel":       ("sbt",    "sbt 'runMain FizzBuzzApp'"),
     "solidity":     (None, "compile-only; all() must be called on-chain"),
     "move":         (None, "compile-only; all() must be called on-chain"),

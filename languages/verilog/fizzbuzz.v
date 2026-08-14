@@ -13,6 +13,5 @@ module fizzbuzz;
             else
                 $display("%0d", i);
         end
-        $finish;
     end
 endmodule
