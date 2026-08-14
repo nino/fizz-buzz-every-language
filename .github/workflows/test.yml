@@ -76,6 +76,19 @@ jobs:
           cargo install uiua --features binary >/dev/null 2>&1 \
             && echo "ok   uiua" || echo "::warning::cargo install uiua failed"
 
+      - name: Install BQN (CBQN)
+        if: inputs.toolchains != 'apt'
+        run: |
+          # The runner can reach GitHub, so the submodules come down normally
+          # rather than through the Go module proxy this repo's notes describe.
+          if git clone --depth 1 --recursive \
+               https://github.com/dzaima/CBQN /tmp/cbqn >/dev/null 2>&1 \
+             && make -C /tmp/cbqn -j"$(nproc)" >/dev/null 2>&1; then
+            sudo cp /tmp/cbqn/BQN /usr/local/bin/bqn && echo "ok   bqn"
+          else
+            echo "::warning::CBQN build failed"
+          fi
+
       - name: Install npm and dotnet toolchains
         run: |
           for pkg in coffeescript sass purescript spago; do

@@ -44,14 +44,14 @@ On the container this was developed in:
 
 | | count |
 |---|---|
-| **Verified** — runs here and matches `expected.txt` byte for byte | 95 |
-| **Skipped** — toolchain not installed, implementation untested | 76 |
+| **Verified** — runs here and matches `expected.txt` byte for byte | 96 |
+| **Skipped** — toolchain not installed, implementation untested | 75 |
 | **Not runnable as a stdout program** — documented, see below | 30 |
 
 Verified so far:
 
 `ada` `agda` `algol68` `asm-arm64` `asm-mips` `asm-riscv` `asm-x86-64` `ats`
-`awk` `bash` `basic` `bc` `befunge` `brainfuck` `c` `clojure` `cobol`
+`awk` `bash` `basic` `bc` `befunge` `bqn` `brainfuck` `c` `clojure` `cobol`
 `coffeescript` `common-lisp` `cpp` `csharp` `d` `dash` `dc` `ed` `elixir`
 `elvish` `emacs-lisp` `enterprise-java` `erlang` `fish` `forth` `fortran`
 `fsharp` `gap` `go` `groff` `groovy` `haskell` `haxe` `icon` `java`
@@ -136,6 +136,23 @@ and constructor injection through a hand-rolled `ApplicationContext`. The
 `i % 15 == 0` that every other implementation writes inline is a class here,
 and its priority constant is what actually encodes "check this first". It
 compiles, and its output is byte-identical to everyone else's.
+
+### Getting a BQN out of a network with no GitHub
+
+Verifying BQN took a detour worth writing down. The only BQN implementations
+are on GitHub, which this container's egress proxy blocks; the crates.io and
+PyPI packages are both FFI bindings that link a `libcbqn` you must already
+have. CBQN builds from source, but its makefile pulls three git submodules —
+bytecode, Singeli and replxx — and git cannot reach GitHub either.
+
+The way through: `proxy.golang.org` **is** on the allowlist, and the Go module
+proxy will serve any GitHub repository as a versioned zip without the client
+ever contacting github.com. Asking it for `@latest` yields a pseudo-version,
+and `@v/<version>.zip` yields the tree. Three fetches later all three
+submodules were on disk as `build/bytecodeLocal`, `build/singeliLocal` and
+`build/replxxLocal`, and `make nogit=1 version=0.8.0 singeli=0` produced a
+working `BQN`. (Singeli is off because its latest revision has drifted from
+the vendored CBQN — exactly the desync its README warns about.)
 
 ### Genuine gaps
 
