@@ -40,14 +40,14 @@ as SKIP rather than FAIL — no single machine has 201 toolchains on it.
 
 ## Status
 
-On the container this was developed in. CI verifies a different 86 — between them, **107 of the 201 have actually run**; the two sets differ because neither machine has every toolchain.
+On the container this was developed in. CI verifies a different 109 — between them, **118 of the 201 have actually run**; the two sets differ because neither machine has every toolchain.
 
 Locally:
 
 | | count |
 |---|---|
-| **Verified** — runs here and matches `expected.txt` byte for byte | 98 |
-| **Skipped** — toolchain not installed, implementation untested | 73 |
+| **Verified** — runs here and matches `expected.txt` byte for byte | 99 |
+| **Skipped** — toolchain not installed, implementation untested | 72 |
 | **Not runnable as a stdout program** — documented, see below | 30 |
 
 Verified so far:
@@ -58,7 +58,7 @@ Verified so far:
 `elvish` `emacs-lisp` `enterprise-java` `erlang` `fish` `forth` `fortran`
 `fsharp` `gap` `go` `groff` `groovy` `haskell` `haxe` `icon` `java`
 `javascript` `jq` `jsonnet` `ksh` `llvm-ir` `lua` `m4` `make` `maxima`
-`minizinc` `modula2` `newlisp` `nickle` `nim` `objective-c` `ocaml` `octave`
+`minizinc` `modula2` `newlisp` `nickle` `nim` `nushell` `objective-c` `ocaml` `octave`
 `ook` `pari-gp` `pascal` `perl` `php` `pike` `postscript` `prolog` `python`
 `r` `racket` `raku` `rexx` `ruby` `rust` `sass` `scala` `scheme` `sed`
 `shakespeare` `singular` `sql` `standard-ml` `systemverilog` `tcl` `tcsh` `tex` `typescript`
