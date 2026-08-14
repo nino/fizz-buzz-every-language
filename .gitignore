@@ -1,0 +1,17 @@
+# build artifacts
+*.o
+*.hi
+*.cmi
+*.cmo
+*.vo
+*.vok
+*.vos
+*.glob
+*.beam
+*.class
+*.exe
+*.jar
+.lia.cache
+.nia.cache
+fizzbuzz
+!languages/*/fizzbuzz.*

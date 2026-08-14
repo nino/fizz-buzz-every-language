@@ -1,0 +1,9 @@
+v      FizzBuzz in Befunge-93
+>1>:"d"`#v_v
+ |       >$@
+ >:15%!#v_> "zzuBzziF"v
+        >:3%!#v_ "zziF" v
+              >:5%!#v_"zzuB"v
+                    >:.25*,>v
+ v,+55  <               <
+ >1+^

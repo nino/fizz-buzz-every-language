@@ -1,0 +1,13 @@
+to fizzbuzz :n
+  if equal? 0 modulo :n 15 [print "FizzBuzz stop]
+  if equal? 0 modulo :n 3 [print "Fizz stop]
+  if equal? 0 modulo :n 5 [print "Buzz stop]
+  print :n
+end
+
+to main
+  for [i 1 100] [fizzbuzz :i]
+end
+
+main
+bye

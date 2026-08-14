@@ -1,0 +1,12 @@
+// FizzBuzz in Soufflé Datalog.
+.decl num(n: number)
+.decl out(n: number, s: symbol)
+.output out
+
+num(1).
+num(n + 1) :- num(n), n < 100.
+
+out(n, "FizzBuzz") :- num(n), n % 15 = 0.
+out(n, "Fizz")     :- num(n), n % 3 = 0, n % 15 != 0.
+out(n, "Buzz")     :- num(n), n % 5 = 0, n % 15 != 0.
+out(n, to_string(n)) :- num(n), n % 3 != 0, n % 5 != 0.

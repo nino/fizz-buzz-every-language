@@ -1,0 +1,69 @@
+FizzBuzz in Whitespace -- readable listing of fizzbuzz.ws.
+Regenerate both with tools/gen_whitespace.py.
+
+push 1
+LOOP:
+dup
+push 15
+mod
+jz FIZZBUZZ
+dup
+push 3
+mod
+jz FIZZ
+dup
+push 5
+mod
+jz BUZZ
+dup
+outnum
+jmp ENDIF
+FIZZBUZZ:
+push 70
+outchar
+push 105
+outchar
+push 122
+outchar
+push 122
+outchar
+push 66
+outchar
+push 117
+outchar
+push 122
+outchar
+push 122
+outchar
+jmp ENDIF
+FIZZ:
+push 70
+outchar
+push 105
+outchar
+push 122
+outchar
+push 122
+outchar
+jmp ENDIF
+BUZZ:
+push 66
+outchar
+push 117
+outchar
+push 122
+outchar
+push 122
+outchar
+ENDIF:
+push 10
+outchar
+push 1
+add
+dup
+push 101
+sub
+jz END
+jmp LOOP
+END:
+end

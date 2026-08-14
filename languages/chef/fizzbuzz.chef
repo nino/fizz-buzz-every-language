@@ -1,0 +1,32 @@
+FizzBuzz Souffle.
+
+A recipe that serves the numbers one through one hundred, substituting
+Fizz for multiples of three, Buzz for multiples of five, and FizzBuzz
+for multiples of fifteen.
+
+Ingredients.
+1 g counter
+3 g fizz divisor
+5 g buzz divisor
+15 g fizzbuzz divisor
+100 g limit
+70 g F
+105 g i
+122 g z
+66 g B
+117 g u
+10 g newline
+
+Method.
+Put newline into mixing bowl.
+Put z into mixing bowl.
+Put z into mixing bowl.
+Put u into mixing bowl.
+Put B into mixing bowl.
+Put z into mixing bowl.
+Put z into mixing bowl.
+Put i into mixing bowl.
+Put F into mixing bowl.
+Pour contents of the mixing bowl into the baking dish.
+
+Serves 1.

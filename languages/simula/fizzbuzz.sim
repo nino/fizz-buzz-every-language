@@ -1,0 +1,15 @@
+Begin
+    Integer i;
+    For i := 1 Step 1 Until 100 Do
+    Begin
+        If Mod(i, 15) = 0 Then
+            OutText("FizzBuzz")
+        Else If Mod(i, 3) = 0 Then
+            OutText("Fizz")
+        Else If Mod(i, 5) = 0 Then
+            OutText("Buzz")
+        Else
+            OutInt(i, 0);
+        OutImage;
+    End;
+End;
