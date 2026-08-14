@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write languages/<slug>/run.sh for every entry in the manifest."""
-import os
 import stat
+import subprocess
 import sys
 from pathlib import Path
 
@@ -56,7 +56,22 @@ def main() -> int:
         p.name for p in LANG_DIR.iterdir() if p.is_dir() and p.name not in LANGUAGES
     )
 
+    # A .gitignore pattern that accidentally matches a directory can hide a
+    # whole implementation without any visible error, so check for it here.
+    ignored = subprocess.run(
+        ["git", "ls-files", "--others", "--ignored", "--exclude-standard",
+         str(LANG_DIR)],
+        capture_output=True, text=True, cwd=ROOT,
+    ).stdout.split()
+    sources = [f for f in ignored
+               if not f.endswith((".o", ".hi", ".class", ".beam", ".cmi",
+                                  ".cmo", ".vo", ".glob", ".exe", ".jar"))]
+
     print(f"generated {len(LANGUAGES) - len(missing)} runners")
+    if sources:
+        print(f"WARNING: {len(sources)} source file(s) are git-ignored:")
+        for f in sources[:10]:
+            print(f"  {f}")
     if missing:
         print(f"manifest entries with no directory: {', '.join(missing)}")
     if extra:

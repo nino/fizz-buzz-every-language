@@ -1,4 +1,10 @@
-# build artifacts
+# Build artifacts.
+#
+# Patterns here must be anchored. A bare `fizzbuzz` line once matched the
+# package directory com/example/enterprise/fizzbuzz/ and silently swallowed
+# every source file under it -- gitignore excludes directories as readily as
+# files, and a deeper negation cannot bring back what an excluded directory
+# took with it.
 *.o
 *.hi
 *.cmi
@@ -13,5 +19,8 @@
 *.jar
 .lia.cache
 .nia.cache
-fizzbuzz
-!languages/*/fizzbuzz.*
+
+# Compiled executables produced beside a source file by the few runners that
+# cannot build into a temporary directory. Anchored to one level so it never
+# matches a directory deeper in a source tree.
+/languages/*/fizzbuzz
