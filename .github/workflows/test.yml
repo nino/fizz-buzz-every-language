@@ -69,6 +69,13 @@ jobs:
               && echo "ok   $p" || echo "::warning::could not install $p"
           done
 
+      - name: Install cargo toolchains
+        if: inputs.toolchains != 'apt'
+        run: |
+          # Uiua ships on crates.io; its binary target is behind a feature.
+          cargo install uiua --features binary >/dev/null 2>&1 \
+            && echo "ok   uiua" || echo "::warning::cargo install uiua failed"
+
       - name: Install npm and dotnet toolchains
         run: |
           for pkg in coffeescript sass purescript spago; do

@@ -44,8 +44,8 @@ On the container this was developed in:
 
 | | count |
 |---|---|
-| **Verified** — runs here and matches `expected.txt` byte for byte | 94 |
-| **Skipped** — toolchain not installed, implementation untested | 77 |
+| **Verified** — runs here and matches `expected.txt` byte for byte | 95 |
+| **Skipped** — toolchain not installed, implementation untested | 76 |
 | **Not runnable as a stdout program** — documented, see below | 30 |
 
 Verified so far:
