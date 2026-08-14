@@ -1,6 +1,9 @@
 package fizzbuzz
 
-import "strconv"
+import (
+	"list"
+	"strconv"
+)
 
 #fizzbuzz: {
 	n: int
@@ -12,4 +15,4 @@ import "strconv"
 	][0]
 }
 
-result: [for i, _ in list.Range(1, 101, 1) {(#fizzbuzz & {n: i + 1}).out}]
+result: [for i in list.Range(1, 101, 1) {(#fizzbuzz & {n: i}).out}]

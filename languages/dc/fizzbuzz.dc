@@ -1,35 +1,10 @@
-# FizzBuzz in dc (GNU). Registers: i = counter, F/B/N = branch macros.
-[FizzBuzz]sF
-[Fizz]sZ
-[Buzz]sU
-1si
-[
-  li 15 % 0 =f
-  li 3 % 0 =z
-  li 5 % 0 =u
-  lp 1 = n
-] sL
-[lF p 1 sp] sf
-[lZ p 1 sp] sz
-[lU p 1 sp] su
-[li p] sn
-[
-  0 sp
-  li 15 % 0 =f
-  lp 0 =q1
-  q1
-] s?
-[
-  0 sp
-  li 15 % 0 =f
-  lp 1 =s
-  li 3 % 0 =z
-  lp 1 =s
-  li 5 % 0 =u
-  lp 1 =s
-  li p
-  [] ss
-  li 1 + si
-  li 100 !< M
-] sM
-lM x
+# FizzBuzz in dc.
+# G/F/B print a word and then `q`, which exits both the printing macro and
+# the per-number macro M -- dc has no else, so the early exit is the else.
+[[FizzBuzz]pq]sG
+[[Fizz]pq]sF
+[[Buzz]pq]sB
+[li 15 % 0 =G li 3 % 0 =F li 5 % 0 =B li p]sM
+1 si
+[lM x li 1 + si li 101 >L]sL
+lL x

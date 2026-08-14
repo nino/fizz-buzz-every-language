@@ -1,13 +1,18 @@
 NB. FizzBuzz in J
-fizzbuzz =: monad define
-  n =. y
-  select. 0 = 15 3 5 | n
-    case. 1 0 0 do. 'FizzBuzz'
-    case. 0 1 0 do. 'Fizz'
-    case. 0 0 1 do. 'Buzz'
-    case. do. ": n
+fizzbuzz =: 3 : 0
+  if. 0 = 15 | y do. 'FizzBuzz'
+  elseif. 0 = 3 | y do. 'Fizz'
+  elseif. 0 = 5 | y do. 'Buzz'
+  elseif. do. ": y
   end.
 )
 
-echo > fizzbuzz"0 >: i. 100
+main =: 3 : 0
+  for_i. >: i. 100 do.
+    echo fizzbuzz i
+  end.
+  i. 0 0
+)
+
+main ''
 exit ''

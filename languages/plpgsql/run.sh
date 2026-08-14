@@ -9,4 +9,5 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
+pg_isready -q 2>/dev/null || { echo 'no postgres server' >&2; exit 127; }
 psql -q -f fizzbuzz.sql 2>&1 | sed -e 's/^NOTICE:  //'

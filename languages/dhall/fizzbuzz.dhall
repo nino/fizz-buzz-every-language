@@ -1,22 +1,23 @@
+-- FizzBuzz in Dhall. Dhall is total and has no modulo, so `mod` is built
+-- from integer division: n - d * (n / d).
 let List/map = https://prelude.dhall-lang.org/List/map
 let Natural/enumerate = https://prelude.dhall-lang.org/Natural/enumerate
 let Text/concatSep = https://prelude.dhall-lang.org/Text/concatSep
 
-let fizzbuzz =
+let mod =
       \(n : Natural) ->
-        if        Natural/isZero (Natural/subtract (n * 0) (Natural/fold n Natural (\(x : Natural) -> x) 0))
-        then      ""
-        else      ""
+      \(d : Natural) ->
+        Natural/subtract (d * (n / d)) n
 
 let classify =
       \(n : Natural) ->
-        let m15 = Natural/subtract (15 * (n / 15)) n
-        let m3 = Natural/subtract (3 * (n / 3)) n
-        let m5 = Natural/subtract (5 * (n / 5)) n
-        in  if Natural/isZero m15 then "FizzBuzz"
-            else if Natural/isZero m3 then "Fizz"
-            else if Natural/isZero m5 then "Buzz"
-            else Natural/show n
+        if        Natural/isZero (mod n 15)
+        then      "FizzBuzz"
+        else if   Natural/isZero (mod n 3)
+        then      "Fizz"
+        else if   Natural/isZero (mod n 5)
+        then      "Buzz"
+        else      Natural/show n
 
 in  Text/concatSep
       "\n"

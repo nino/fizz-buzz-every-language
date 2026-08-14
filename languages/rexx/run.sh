@@ -9,4 +9,4 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-rexx fizzbuzz.rexx
+rexx ./fizzbuzz.rexx
