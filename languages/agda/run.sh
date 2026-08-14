@@ -9,4 +9,4 @@ fi
 T="$(mktemp -d)"
 trap 'rm -rf "$T"' EXIT
 
-agda --compile --compile-dir=$T Fizzbuzz.agda 1>&2 && $T/Fizzbuzz
+agda --compile --ghc-flag=-Wwarn --compile-dir=$T Fizzbuzz.agda 1>&2 && $T/Fizzbuzz

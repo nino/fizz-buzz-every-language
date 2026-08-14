@@ -75,7 +75,8 @@ LANGUAGES = {
     "common-lisp":  ("sbcl",   "sbcl --script fizzbuzz.lisp"),
     "emacs-lisp":   ("emacs",  "emacs --batch --quick --script fizzbuzz.el 2>/dev/null"),
     "idris":        ("idris2", "idris2 -o fizzbuzz --output-dir $T Fizzbuzz.idr >/dev/null && $T/fizzbuzz"),
-    "agda":         ("agda",   "agda --compile --compile-dir=$T Fizzbuzz.agda 1>&2 && $T/Fizzbuzz"),
+    "agda":         ("agda",   "agda --compile --ghc-flag=-Wwarn --compile-dir=$T Fizzbuzz.agda 1>&2 && "
+                               "$T/Fizzbuzz"),
     "coq":          (None, "Compute prints a Coq term; needs extraction to run"),
     "lean":         ("lean",   "lean --run Fizzbuzz.lean"),
     "roc":          ("roc",    "roc run fizzbuzz.roc"),

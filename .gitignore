@@ -24,3 +24,11 @@
 # cannot build into a temporary directory. Anchored to one level so it never
 # matches a directory deeper in a source tree.
 /languages/*/fizzbuzz
+
+# Artifacts written beside the source by tools that offer no way to redirect
+# them: a68g drops a PRNG seed in the cwd, and patscc emits its intermediate
+# C next to the .dats it compiles.
+/languages/algol68/.Random.seed
+/languages/ats/*_dats.c
+__pycache__/
+*.pyc
